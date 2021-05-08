@@ -1,12 +1,22 @@
 import uuid
-from fastapi import FastAPI
 from typing import Optional
 from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api import get_sentiment_gen
 from api import get_sentiment_scorer
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://192.168.0.105:3000"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTION"],
+    allow_headers=["*"],
+)
+
+# FIXME: This may not work, depends on twint's underlying storage
 gens = {}
 sess = get_sentiment_scorer()
 
@@ -36,6 +46,7 @@ class NextTweet(BaseModel):
     #  retweets: Optional[int] = None
     #  hashtags: Optional[List[str]] = None
 
+# TODO: on searching again the previous uid should be cleared.
 
 def get_uid() -> str:
     return str(uuid.uuid4())
