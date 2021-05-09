@@ -43,29 +43,39 @@ async function getTweet(obj) {
 }
 
 function App() {
-  // TODO: add a stop button.
-  // TODO: switch from setState to somethign else, this ain't instant
-  const [tries, setTries] = useState(0);
+  const [uid, setUid] = useState("");
   const [stop, setStop] = useState(false);
+  const [tries, setTries] = useState(0);
   const [tweetList, setTweetList] = useState([]);
+
+  useEffect(() => {
+    // Effect sends stop request, breaks loop.
+    if (stop && uid !== "") {
+      getTweet({ uid, stop });
+      return () => {
+        setStop(false);
+        setUid("");
+      };
+    }
+  }, [stop, uid]);
 
   async function getTweets(uid) {
     while (true) {
       let tweetObject = await getTweet({ uid, stop });
       if (!tweetObject.success) break;
-      console.log(tweetObject);
       // FIXME: shitty op, copies entire list.
       setTweetList([...tweetList, tweetObject]);
     }
-    // TODO: do something here.
   }
 
   async function handleSearch(filtered) {
+    setUid("");
     setStop(false);
     setTweetList([]);
     const { success, uid } = await startSearch(filtered);
     console.log(success, uid);
     if (success) {
+      setUid(uid);
       getTweets(uid);
     } else if (tries < 10) {
       // FIXME: This won't work as expected, setTries will get queued
@@ -78,26 +88,23 @@ function App() {
 
   function handleClick(searchObject) {
     const filtered = getFilteredSearch(searchObject);
-    console.log(filtered);
     handleSearch(filtered);
   }
   const classes = useStyles();
   return (
-    <Paper className={classes.app} elevation={8}>
+    <Paper className={classes.app} elevation={10}>
       <Title className={classes.title} />
       <div>
         <canvas />
         <canvas />
       </div>
-      <InputGroup handleClick={handleClick} />
-      <button
-        onClick={() => {
-          console.log("clickk");
+      <InputGroup
+        handleClick={handleClick}
+        handleStop={() => {
+          // FIXME: conditionally setStop, button should be disabled
           setStop(true);
         }}
-      >
-        clickme
-      </button>
+      />
     </Paper>
   );
 }

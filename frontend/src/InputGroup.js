@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { IconButton } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { ReactComponent as Logo } from "./chattr.svg";
+import { ReactComponent as ChattrButton } from "./chattr.svg";
+import { ReactComponent as StopButton } from "./stop.svg";
 
+const BSIZE = 48;
 const useStyles = makeStyles({
   inputContainer: {
     display: "flex",
@@ -25,11 +27,12 @@ const useStyles = makeStyles({
     width: "25%",
     border: "8px solid white",
   },
+  buttonGroup: {},
   button: {
     padding: 0,
     margin: 8,
-    width: 64,
-    height: 64,
+    width: BSIZE,
+    height: BSIZE,
   },
 });
 
@@ -44,7 +47,6 @@ export default function InputGroup(props) {
 
   function handleClick() {
     props.handleClick({ ...state });
-
   }
 
   return (
@@ -54,9 +56,14 @@ export default function InputGroup(props) {
         <input type="datetime-local" placeholder="Since" name="since" className={classes.inputs} value={state.since} onChange={handleChange} />
         <input type="datetime-local" placeholder="Until" name="until" className={classes.inputs} value={state.until} onChange={handleChange} />
       </div>
-      <IconButton className={classes.button} onClick={handleClick}>
-        <Logo width={64} height={64} />
-      </IconButton>
+      <div className={classes.buttonGroup}>
+        <IconButton className={classes.button} onClick={handleClick}>
+          <ChattrButton width={BSIZE} height={BSIZE} />
+        </IconButton>
+        <IconButton className={classes.button} onClick={props.handleStop}>
+          <StopButton width={BSIZE} height={BSIZE} />
+        </IconButton>
+      </div>
     </div>
   );
 }
