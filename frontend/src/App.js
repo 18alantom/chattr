@@ -81,7 +81,6 @@ function App() {
   }, [stop, uid]);
 
   async function getTweets(uid) {
-    console.log("getting tweets");
     clearChart(charts.lineChart);
     clearChart(charts.barChart);
 
