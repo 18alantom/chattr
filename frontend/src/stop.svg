@@ -1,11 +1,4 @@
 <svg width="480" height="480" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="240" cy="240" r="240" fill="url(#paint0_linear)"/>
+<circle cx="240" cy="240" r="240" fill="#EEEEEE"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M362 118H117V363H362V118ZM246.861 209.061C251.346 203.938 257.813 201 264.602 201C277.602 201 288.18 211.577 288.18 224.578C288.18 240.093 272.007 258.442 240.09 279.156C208.173 258.442 192 240.093 192 224.578C192 211.577 202.578 201 215.578 201C222.367 201 228.833 203.938 233.319 209.061L240.09 216.793L246.861 209.061Z" fill="#212121"/>
-<defs>
-<linearGradient id="paint0_linear" x1="0" y1="480" x2="579.132" y2="253.777" gradientUnits="userSpaceOnUse">
-<stop stop-color="#A41FBA"/>
-<stop offset="0.0001" stop-color="#B747EB"/>
-<stop offset="1" stop-color="#41F1F1"/>
-</linearGradient>
-</defs>
 </svg>

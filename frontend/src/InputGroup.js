@@ -25,7 +25,7 @@ const useStyles = makeStyles({
     fontFamily: "monospace",
     fontSize: "1.25rem",
     borderRadius: "8px",
-    width: "40%",
+    width: "50%",
     border: "8px solid white",
   },
   buttonGroup: {},

@@ -3,12 +3,9 @@ import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { ReactComponent as ChattrTitle } from "./title.svg";
 import ChartContainer from "./ChartContainer.js";
-import {
-  configLineChart,
-  updateLineChart,
-  clearLineChart,
-} from "./chart-stuff";
-import { configBarChart, updateBarChart, clearBarChart } from "./chart-stuff";
+import { configLineChart, updateLineChart } from "./chart-stuff";
+import { configBarChart, updateBarChart } from "./chart-stuff";
+import { clearChart } from "./chart-stuff";
 import InputGroup from "./InputGroup";
 
 const URL = "http://127.0.0.1:8000";
@@ -66,7 +63,7 @@ function App() {
   const [charts, setCharts] = useState({ lineChart: null, barChart: null });
 
   useEffect(() => {
-    console.log("setting charts");
+    // Effect initializes the chars
     const lineChart = configLineChart();
     const barChart = configBarChart();
     setCharts({ lineChart, barChart });
@@ -85,8 +82,8 @@ function App() {
 
   async function getTweets(uid) {
     console.log("getting tweets");
-    clearLineChart();
-    clearBarChart();
+    clearChart(charts.lineChart);
+    clearChart(charts.barChart);
 
     while (true) {
       let tweetObject = await getTweet({ uid, stop });
@@ -101,7 +98,6 @@ function App() {
     setUid("");
     setStop(false);
     const { success, uid } = await startSearch(filtered);
-    console.log(success, uid);
     if (success) {
       setUid(uid);
       getTweets(uid);
