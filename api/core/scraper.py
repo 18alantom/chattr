@@ -1,5 +1,13 @@
 import twint
 
+
+def _format_datetime(dt):
+    if dt is not None:
+        dt = dt.replace("T"," ")
+        dt += ":00"
+    return dt
+
+
 def _twint_gen(config, limit):
     twint.output.tweets_list = []
     prev_count = 0
@@ -8,7 +16,8 @@ def _twint_gen(config, limit):
         count = len(twint.output.tweets_list)
         yield twint.output.tweets_list[prev_count: count + prev_count]
         prev_count = count
-    
+
+
 def _get_twint_gen(search=None, since=None, until=None, username=None, min_retweets=0, min_replies=0, limit=10):
     """
     returns generator, on calling next(generator) returns 100 tweets.
@@ -16,8 +25,8 @@ def _get_twint_gen(search=None, since=None, until=None, username=None, min_retwe
     """
     config = twint.Config()
     config.Search = search
-    config.Since = since
-    config.Until = until
+    config.Since = _format_datetime(since)
+    config.Until = _format_datetime(until)
     config.Username = username
     config.Min_replies = min_replies
     config.Min_retweets = min_retweets
@@ -29,6 +38,7 @@ def _get_twint_gen(search=None, since=None, until=None, username=None, min_retwe
     if not config.Username:
         config.Min_likes = 10
     return _twint_gen(config, limit)
+
 
 def _process_tweet(tweet, get_sentiment_score):
     """
@@ -46,6 +56,7 @@ def _process_tweet(tweet, get_sentiment_score):
         replies=tweet.replies_count,
         hashtags=tweet.hashtags
     )
+
 
 def get_sentiment_gen(config, get_sentiment_score, limit=2):
     """

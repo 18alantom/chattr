@@ -34,19 +34,7 @@ class NextTweet(BaseModel):
     uid: str
     stop: Optional[bool] = False
 
-#  class Tweet(BaseModel):
-    #  success: bool
-    #  message : Optional[str] = None
-    #  username: Optional[str] = None
-    #  id: Optional[str] = None
-    #  datetime: Optional[str] = None
-    #  sentiment: Optional[List[float]] = None
-    #  likes: Optional[int] = None
-    #  replies: Optional[int] = None
-    #  retweets: Optional[int] = None
-    #  hashtags: Optional[List[str]] = None
 
-# TODO: on searching again the previous uid should be cleared.
 
 def get_uid() -> str:
     return str(uuid.uuid4())
@@ -99,3 +87,5 @@ def get_next(gens, uid, tweet):
 def del_gen(gens, uid, tweet):
     del gens[uid]
     tweet['message'] = "start new search"
+
+# TODO: on searching again the previous uid should be cleared.
