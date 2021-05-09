@@ -1,7 +1,14 @@
 import { Paper } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { ReactComponent as Title } from "./title.svg";
+import { ReactComponent as ChattrTitle } from "./title.svg";
+import ChartContainer from "./ChartContainer.js";
+import {
+  configLineChart,
+  updateLineChart,
+  clearLineChart,
+} from "./chart-stuff";
+import { configBarChart, updateBarChart, clearBarChart } from "./chart-stuff";
 import InputGroup from "./InputGroup";
 
 const URL = "http://127.0.0.1:8000";
@@ -20,6 +27,12 @@ const useStyles = makeStyles({
     height: 50,
     transform: "rotate(-45deg)",
   },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    height: "100%",
+  },
 });
 
 const getFilteredSearch = (searchObject) => {
@@ -32,13 +45,17 @@ const getFilteredSearch = (searchObject) => {
 };
 
 async function startSearch(filtered) {
-  return await fetch(URL + "/start_search", { method: "POST", body: JSON.stringify(filtered) }).then((res) => res.json());
+  return await fetch(URL + "/start_search", {
+    method: "POST",
+    body: JSON.stringify(filtered),
+  }).then((res) => res.json());
 }
 
 async function getTweet(obj) {
-  console.log("gettingtweets", obj);
-  const tweetObject = await fetch(URL + "/get_tweet", { method: "POST", body: JSON.stringify(obj) }).then((res) => res.json());
-  console.log(tweetObject);
+  const tweetObject = await fetch(URL + "/get_tweet", {
+    method: "POST",
+    body: JSON.stringify(obj),
+  }).then((res) => res.json());
   return tweetObject;
 }
 
@@ -46,7 +63,14 @@ function App() {
   const [uid, setUid] = useState("");
   const [stop, setStop] = useState(false);
   const [tries, setTries] = useState(0);
-  const [tweetList, setTweetList] = useState([]);
+  const [charts, setCharts] = useState({ lineChart: null, barChart: null });
+
+  useEffect(() => {
+    console.log("setting charts");
+    const lineChart = configLineChart();
+    const barChart = configBarChart();
+    setCharts({ lineChart, barChart });
+  }, []);
 
   useEffect(() => {
     // Effect sends stop request, breaks loop.
@@ -60,18 +84,22 @@ function App() {
   }, [stop, uid]);
 
   async function getTweets(uid) {
+    console.log("getting tweets");
+    clearLineChart();
+    clearBarChart();
+
     while (true) {
       let tweetObject = await getTweet({ uid, stop });
+      console.log(tweetObject);
       if (!tweetObject.success) break;
-      // FIXME: shitty op, copies entire list.
-      setTweetList([...tweetList, tweetObject]);
+      updateLineChart(charts.lineChart, tweetObject);
+      updateBarChart(charts.barChart, tweetObject);
     }
   }
 
   async function handleSearch(filtered) {
     setUid("");
     setStop(false);
-    setTweetList([]);
     const { success, uid } = await startSearch(filtered);
     console.log(success, uid);
     if (success) {
@@ -93,18 +121,17 @@ function App() {
   const classes = useStyles();
   return (
     <Paper className={classes.app} elevation={10}>
-      <Title className={classes.title} />
-      <div>
-        <canvas />
-        <canvas />
+      <ChattrTitle className={classes.title} />
+      <div className={classes.container}>
+        <ChartContainer />
+        <InputGroup
+          handleClick={handleClick}
+          handleStop={() => {
+            // FIXME: conditionally setStop, button should be disabled
+            setStop(true);
+          }}
+        />
       </div>
-      <InputGroup
-        handleClick={handleClick}
-        handleStop={() => {
-          // FIXME: conditionally setStop, button should be disabled
-          setStop(true);
-        }}
-      />
     </Paper>
   );
 }

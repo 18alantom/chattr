@@ -11,6 +11,7 @@ const useStyles = makeStyles({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: "12px",
   },
   form: {
     background: "#212121",
@@ -22,9 +23,9 @@ const useStyles = makeStyles({
     outline: "#212121",
     color: "#212121",
     fontFamily: "monospace",
-    fontSize: "1.5rem",
+    fontSize: "1.25rem",
     borderRadius: "8px",
-    width: "25%",
+    width: "40%",
     border: "8px solid white",
   },
   buttonGroup: {},
@@ -52,9 +53,30 @@ export default function InputGroup(props) {
   return (
     <div className={classes.inputContainer}>
       <div className={classes.form}>
-        <input type="text" placeholder="Search" name="search" className={classes.inputs} value={state.search} onChange={handleChange} />
-        <input type="datetime-local" placeholder="Since" name="since" className={classes.inputs} value={state.since} onChange={handleChange} />
-        <input type="datetime-local" placeholder="Until" name="until" className={classes.inputs} value={state.until} onChange={handleChange} />
+        <input
+          type="text"
+          placeholder="Search"
+          name="search"
+          className={classes.inputs}
+          value={state.search}
+          onChange={handleChange}
+        />
+        <input
+          type="datetime-local"
+          placeholder="Since"
+          name="since"
+          className={classes.inputs}
+          value={state.since}
+          onChange={handleChange}
+        />
+        {/* <input
+          type="datetime-local"
+          placeholder="Until"
+          name="until"
+          className={classes.inputs}
+          value={state.until}
+          onChange={handleChange}
+        /> */}
       </div>
       <div className={classes.buttonGroup}>
         <IconButton className={classes.button} onClick={handleClick}>
